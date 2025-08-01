@@ -185,4 +185,138 @@ Finished: SUCCESS
 
 ### Задание 3
 
+## Вывод пайплайна
+
+```
+Started by user test
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/lib/jenkins/workspace/pipetest
+[Pipeline] {
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Checkout)
+[Pipeline] git
+The recommended git tool is: NONE
+No credentials specified
+ > git rev-parse --resolve-git-dir /var/lib/jenkins/workspace/pipetest/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/hovhannisyan-code/8-2-fork.git # timeout=10
+Fetching upstream changes from https://github.com/hovhannisyan-code/8-2-fork.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.39.5'
+ > git fetch --tags --force --progress -- https://github.com/hovhannisyan-code/8-2-fork.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/main^{commit} # timeout=10
+Checking out Revision 223dbc3f489784448004e020f2ef224f17a7b06d (refs/remotes/origin/main)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 223dbc3f489784448004e020f2ef224f17a7b06d # timeout=10
+ > git branch -a -v --no-abbrev # timeout=10
+ > git checkout -b main 223dbc3f489784448004e020f2ef224f17a7b06d # timeout=10
+Commit message: "Update README.md"
+First time build. Skipping changelog.
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Build Binary)
+[Pipeline] sh
++ /usr/local/go/bin/go env
+GO111MODULE=""
+GOARCH="amd64"
+GOBIN=""
+GOCACHE="/var/lib/jenkins/.cache/go-build"
+GOENV="/var/lib/jenkins/.config/go/env"
+GOEXE=""
+GOEXPERIMENT=""
+GOFLAGS=""
+GOHOSTARCH="amd64"
+GOHOSTOS="linux"
+GOINSECURE=""
+GOMODCACHE="/var/lib/jenkins/go/pkg/mod"
+GONOPROXY=""
+GONOSUMDB=""
+GOOS="linux"
+GOPATH="/var/lib/jenkins/go"
+GOPRIVATE=""
+GOPROXY="https://proxy.golang.org,direct"
+GOROOT="/usr/local/go"
+GOSUMDB="sum.golang.org"
+GOTMPDIR=""
+GOTOOLDIR="/usr/local/go/pkg/tool/linux_amd64"
+GOVCS=""
+GOVERSION="go1.17.5"
+GCCGO="gccgo"
+AR="ar"
+CC="gcc"
+CXX="g++"
+CGO_ENABLED="1"
+GOMOD="/var/lib/jenkins/workspace/pipetest/go.mod"
+CGO_CFLAGS="-g -O2"
+CGO_CPPFLAGS=""
+CGO_CXXFLAGS="-g -O2"
+CGO_FFLAGS="-g -O2"
+CGO_LDFLAGS="-g -O2"
+PKG_CONFIG="pkg-config"
+GOGCCFLAGS="-fPIC -m64 -pthread -fmessage-length=0 -fdebug-prefix-map=/tmp/go-build1265363395=/tmp/go-build -gno-record-gcc-switches"
+[Pipeline] sh
++ CGO_ENABLED=0 GOOS=linux /usr/local/go/bin/go build -a -installsuffix nocgo -o app .
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Archive Binary)
+[Pipeline] archiveArtifacts
+Archiving artifacts
+Recording fingerprints
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Upload to Nexus)
+[Pipeline] script
+[Pipeline] {
+[Pipeline] sh
++ curl -v -u admin:admin --upload-file app http://192.168.1.11:8081/repository/testraw/app
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0*   Trying 192.168.1.11:8081...
+* Connected to 192.168.1.11 (192.168.1.11) port 8081 (#0)
+* Server auth using Basic with user 'admin'
+> PUT /repository/testraw/app HTTP/1.1
+> Host: 192.168.1.11:8081
+> Authorization: Basic YWRtaW46YWRtaW4=
+> User-Agent: curl/7.88.1
+> Accept: */*
+> Content-Length: 1864864
+> Expect: 100-continue
+> 
+< HTTP/1.1 100 Continue
+} [65536 bytes data]
+* We are completely uploaded and fine
+< HTTP/1.1 201 Created
+< Server: Nexus/3.82.0-08 (COMMUNITY)
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: sandbox allow-forms allow-modals allow-popups allow-presentation allow-scripts allow-top-navigation
+< X-XSS-Protection: 1; mode=block
+< Content-Length: 0
+< 
+
+100 1821k    0     0  100 1821k      0  12.5M --:--:-- --:--:-- --:--:-- 12.6M
+* Connection #0 to host 192.168.1.11 left intact
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Declarative: Post Actions)
+[Pipeline] echo
+Build and upload successful!
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS
+```
 
